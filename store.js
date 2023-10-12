@@ -1,4 +1,5 @@
 import { createStore } from 'vuex';
+import axios from 'axios'
 
 export const store = createStore({
   state: {
@@ -6,38 +7,34 @@ export const store = createStore({
     data: [
       { password: '11111111', login: 'Danador' }
     ],
-    users: [
-      {
-        id: 1,
-        nikname: 'Papapka',
-        name: 'fedor',
-        email: 'petr@gmail.com',
-        site: 'petr.io'
-      },
-      {
-        id: 2,
-        nikname: 'Pupa',
-        name: 'Taras',
-        email: 'tarasozavr@mail.ru',
-        site: 'taras.com'
-      },
-    ]
+    users: []
   },
   mutations: {
     setAuth(state, value) {
       state.auth = value;
     },
     updateUser(state, user) {
-      state.users.forEach(u => u.id === user.id && (u === user));
+      state.users = state.users.map(u => u.id === user.id ? user : u);
     },
     deleteUser(state, id) {
       state.users = state.users.filter(u => u.id !== id);
     },
     addUser(state, user) {
       state.users.push(user);
+    },
+    setUsers(state, users) {
+      state.users = users;
     }
   },
   actions: {
+    async fetchUsers({ commit }) {
+      try {
+        const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+        commit('setUsers', response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
     updateUser({ commit }, user) {
       commit('updateUser', user);
     },
