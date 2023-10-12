@@ -1,21 +1,22 @@
 <template>
     <div class="container">
-        <form @submit.prevent="authorizated()" class="form">
+        <form @submit.preven="authorizated()" class="form">
             <Input
                 id="login"
                 name="login"
-                placeholder="Ваш логин"
+                label="Ваш логин"
+                placeholder="введите логин"
                 v-model="loginData.login"
-                :validation="valid"
             />
             <Input
                 id="password"
                 name="password"
                 type="password"
-                placeholder="Ваш пароль"
+                label="Ваш пароль"
+                placeholder="введите пароль"
                 v-model="loginData.password"
-                :validation="valid"
             />
+            <span class="validation" v-if="valid">{{ valid }}</span>
             <AppButton
                 type="submit"
             >
@@ -79,5 +80,10 @@ export default {
         display: flex;
         flex-direction: column;
         gap: 10px;
+    }
+    .validation {
+        font-weight: 600;
+        font-size: 18px;
+        color: red;
     }
 </style>
