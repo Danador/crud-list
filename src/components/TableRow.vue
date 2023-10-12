@@ -1,9 +1,9 @@
 <template>
     <tr>
-        <td class="cell">{{ data.nikname }}</td>
+        <td class="cell">{{ data.username }}</td>
         <td class="cell">{{ data.name }}</td>
         <td class="cell">{{ data.email }}</td>
-        <td class="cell">{{ data.site }}</td>
+        <td class="cell">{{ data.website }}</td>
         <td class="cell">
             <div class="buttons">
                 <AppButton @click="edited">Редактировать</AppButton>
