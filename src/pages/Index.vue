@@ -25,22 +25,26 @@
         v-model="showAdd"
         title="Добавить пользователя"
     >
-        <Info v-model="newUser"/>
-        <div class="modal-buttons">
-            <AppButton @click="addUser(newUser), showAdd = false">Добавить</AppButton>
-            <AppButton @click="showAdd = false">Отменить</AppButton>
-        </div>
+        <form class="modal__form" @submit.prevent>
+            <Info v-model="newUser"/>
+            <div class="modal__buttons">
+                <AppButton type="submit" @click="addUser(newUser)">Добавить</AppButton>
+                <AppButton @click="showAdd = false, clearData()">Отменить</AppButton>
+            </div>
+        </form>
     </Modal>
     <!-- edit -->
     <Modal
         title="Редактировать пользователя"
         v-model="showEdit"
     >
-        <Info v-model="userCopy"/>
-        <div class="modal-buttons">
-            <AppButton @click="changed(userCopy), showEdit = false">Сохранить</AppButton>
-            <AppButton @click="showEdit = false">Отменить</AppButton>
-        </div>
+        <form class="modal__form" @submit.prevent>
+            <Info v-model="userCopy"/>
+            <fieldset class="modal__buttons">
+                <AppButton type="submit" @click="changed(userCopy)">Сохранить</AppButton>
+                <AppButton @click="showEdit = false">Отменить</AppButton>
+            </fieldset>
+        </form>
     </Modal>
 </template>
 
@@ -49,6 +53,7 @@ import TableRow from '../components/TableRow.vue';
 import AppButton from '../components/AppButton.vue';
 import Modal from '../components/Modal.vue';
 import Info from '../modules/info/views/Info.vue';
+import { mapGetters } from 'vuex';
 
 export default {
     components: { TableRow, AppButton, Modal, Info },
@@ -62,28 +67,39 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['getUsers']),
         users() {
-            return this.$store.getters.getUsers;
-        }
+            return this.getUsers
+        },
     },
     methods: {
         changeUser(id) {
             const list = this.$store.getters.getUsers
-            list.forEach(i => i.id === id && (this.getUser = i))
-            this.userCopy = Object.assign({}, this.getUser);
+            this.userCopy = Object.assign({}, list.find(i => i.id === id));
         },
         deleted(id) {
             this.$store.dispatch('deleteUser', id);
         },
         changed(obj) {
             this.$store.dispatch('updateUser', obj);
+            this.showEdit = false
         },
         addUser(obj) {
-            this.$store.dispatch('addUser', {
-                id: this.$store.getters.getUsers.length + 1,
-                ...obj
-            });
+            if (Object.keys(this.newUser).length === 4) {
+                this.$store.dispatch('addUser', {
+                    id: this.$store.getters.getUsers.length + 1,
+                    ...obj
+                });
+                this.showAdd = false
+                this.newUser = {}
+            }
+        },
+        clearData() {
+            this.newUser = {}
         }
+    },
+    created() {
+        this.$store.dispatch('fetchUsers');
     }
 };
 </script>
@@ -106,8 +122,14 @@ export default {
         font-weight: 600;
     }
 
-    .modal-buttons {
+    .modal__buttons {
         display: flex;
         gap: 8px;
+    }
+
+    .modal__form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     }
 </style>
