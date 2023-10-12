@@ -1,5 +1,5 @@
 <template>
-    <div class="fields">
+    <fieldset class="fields">
         <Input
             v-for="(field, i) in fields"
             :key="i"
@@ -7,10 +7,11 @@
             :name="field.id"
             :label="field.label"
             :type="field.type"
-            required
+            :required="true"
+            :validation="field.validation"
             v-model="model[field.id]"
         />
-    </div>
+    </fieldset>
 </template>
 <script>
     import Input from '../../../components/Input.vue';
@@ -21,21 +22,29 @@
             return {
                 fields: [
                     {
-                        id: 'nikname',
+                        id: 'username',
                         label: 'Никнейм',
+                        min: 4,
+                        max: 32,
+                        validation: 'Ввведите ник'
                     },
                     {
                         id: 'name',
-                        label: 'Имя'
+                        label: 'Имя',
+                        min: 2,
+                        max: 32,
+                        validation: 'Ввведите имя'
                     },
                     {
                         id: 'email',
                         label: 'E-mail',
-                        type: 'email'
+                        type: 'email',
+                        validation: 'Введите почту'
                     },
                     {
-                        id: 'site',
-                        label: 'Сайт'
+                        id: 'website',
+                        label: 'Сайт',
+                        validation: 'Введите сайт'
                     }
                 ]
             }
