@@ -7,7 +7,9 @@
         <input 
             class="field"
             :id="id" 
-            :name="name" 
+            :name="name"
+            :minlength="minlength"
+            :maxlength="maxlength"
             :type="type" 
             :placeholder="placeholder"
             :required="required"
@@ -46,6 +48,14 @@
                 required: false
             },
             label: {
+                type: String,
+                required: false
+            },
+            minlength: {
+                type: String,
+                required: false
+            },
+            maxlength: {
                 type: String,
                 required: false
             },
@@ -96,6 +106,15 @@
         color: red;
         font-size: 12px;
         line-height: 16px;
+        opacity: 0%; 
+    }
+
+    .field:invalid {
+        color: red;
+    }
+
+    .field:invalid + .field-validation {
+        opacity: 100%;
     }
 
     .field-label {
